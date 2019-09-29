@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  bot:
+    build: .
+    restart: always
+    volumes:
+      - .:/srv
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_HACK_BOT_CC_TOKEN}
+    entrypoint:
+      - python
+      - /srv/cc.py

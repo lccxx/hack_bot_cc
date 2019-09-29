@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 import json
 
 jobd = {}
@@ -23,19 +22,20 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 def savejob():
-    with file('db.json','w') as f:
+    with open('db.json','w') as f:
         f.write(json.dumps(jobl))
 
 def savedaily():
-    with file('dbdaily.json','w') as f:
+    with open('dbdaily.json','w') as f:
         f.write(json.dumps(dailyl))
 
 def readjob():
-    with file('db.json','r') as f:
+    with open('db.json', 'r') as f:
         global jobl
         jobl = json.loads(f.read())
+
 def readdaily():
-    with file('dbdaily.json','r') as f:
+    with open('dbdaily.json','r') as f:
         global dailyl
         dailyl = json.loads(f.read())
 
@@ -90,7 +90,7 @@ def setDailyAlarm(bot,update,args,job_queue,chat_data):
             savedaily()
             update.message.reply_text("acknowledged!")
         except Exception as e:
-            print e
+            print(e)
             update.message.reply_text('check argument')
    
 def cancelDailyAlarm(bot,update,args,chat_data):
@@ -109,7 +109,7 @@ def cancelDailyAlarm(bot,update,args,chat_data):
 def test(bot,update,args,job_queue,chat_data):
     user = update.message.from_user.username
     chat_id = update.message.chat_id
-    print args,chat_data
+    print(args, chat_data)
     if len(args) == 3 and user == 'shneige':
         chat_id = args[2]
         user = args[1]
@@ -132,7 +132,7 @@ def test(bot,update,args,job_queue,chat_data):
     jobd[user] = (job3h,job1h,job24h)
     jobl[user] = (chat_id,time.time()+due-86400+10800)
     savejob()
-    print job_queue,chat_data,chat_id,user
+    print(job_queue, chat_data, chat_id, user)
     #update.message.reply_text('Timer successfully '+reply+'!')
     update.message.reply_text('\xe5\xb7\xb2\xe8\xae\xbe\xe7\xbd\xae!')
 
@@ -166,7 +166,7 @@ def set_timer(bot, update, args, job_queue, chat_data):
         jobl[user] = (chat_id,time.time())
         savejob()
 
-        print job_queue,chat_data,chat_id,user
+        print(job_queue, chat_data, chat_id, user)
         #update.message.reply_text('Timer successfully '+reply+'!')
         update.message.reply_text('+1d!')
 
@@ -177,7 +177,7 @@ def init(job_queue):
     for i in jobl:
         user = i
         chat_id = jobl[i][0]
-	if  (time.time() - jobl[i][1]) > 3*86400:
+        if (time.time() - jobl[i][1]) > 3*86400:
             continue
         due = time.time() - 10800 - jobl[i][1] + 75600
         job3h = job_queue.run_once(alarm_3h, due, context=(chat_id,user))
@@ -217,13 +217,18 @@ def error(bot, update, error):
 
 def main():
     """Run bot."""
-    readjob()
-    readdaily()
 
-    updater = Updater("tgbot id here")
+    try:
+        readjob()
+        readdaily()
+    except Exception as e:
+        print(e)
+        print("tip: auto create if no such file")
+
+    updater = Updater(os.environ['TELEGRAM_BOT_TOKEN'])
 
     init(updater.job_queue)
-    print jobd,dailyd
+    print(jobd, dailyd)
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
