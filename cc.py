@@ -59,13 +59,14 @@ def start(bot, update):
 
 def alarm_3h(bot, job):
     """Send the alarm message."""
-    bot.send_message(job.context[0], text='\xe8\xbf\x98\xe6\x9c\x893\xe5\xb0\x8f\xe6\x97\xb6! @'+job.context[1])
+    bot.send_message(job.context[0], text='还有3小时！ @'+job.context[1])
 
 def alarm_1h(bot, job):
     """Send the alarm message."""
-    bot.send_message(job.context[0], text='\xe8\xbf\x98\xe6\x9c\x891\xe5\xb0\x8f\xe6\x97\xb6! @'+job.context[1])
+    bot.send_message(job.context[0], text='还有1小时！ @'+job.context[1])
+
 def alarm_24h(bot, job):
-    bot.send_message(job.context[0], text='\xe8\xbf\x98\xe6\x9c\x890\xe5\xb0\x8f\xe6\x97\xb6! @'+job.context[1])
+    bot.send_message(job.context[0], text='还有0小时！ @'+job.context[1])
 
 
 def showCustom(bot,job):
@@ -115,7 +116,7 @@ def test(bot,update,args,job_queue,chat_data):
         user = args[1]
 
     elif len(args) != 1:
-        update.message.reply_text('xxx \xe5\x88\x86\xe9\x92\x9f\xe5\x90\x8e\xe6\x8f\x90\xe9\x86\x92 \xe8\xbf\x98\xe6\x9c\x893\xe5\xb0\x8f\xe6\x97\xb6')
+        update.message.reply_text('xxx 分钟后提醒 还有3小时')
         return
     due = int(args[0])*60
     if user in jobd:
@@ -134,7 +135,7 @@ def test(bot,update,args,job_queue,chat_data):
     savejob()
     print(job_queue, chat_data, chat_id, user)
     #update.message.reply_text('Timer successfully '+reply+'!')
-    update.message.reply_text('\xe5\xb7\xb2\xe8\xae\xbe\xe7\xbd\xae!')
+    update.message.reply_text('已设置!')
 
 
     
